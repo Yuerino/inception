@@ -1,0 +1,70 @@
+version: "3.5"
+
+networks:
+  docker-network:
+    name: docker-network
+    driver: bridge
+
+volumes:
+  volume-db:
+    name: volume-db
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/cthien-h/data/mariadb
+  volume-wordpress:
+    name: volume-wordpress
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/cthien-h/data/wordpress
+
+services:
+  mariadb:
+    container_name: mariadb
+    env_file:
+      - .env
+    environment:
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - MYSQL_ROOT_PASSWORD
+    build: ./requirements/mariadb
+    volumes:
+      - /home/cthien-h/data/mariadb:/var/lib/mysql
+    networks:
+      - docker-network
+    restart: unless-stopped
+
+  nginx:
+    container_name: nginx
+    build: ./requirements/nginx
+    ports:
+      - "443:443"
+    volumes:
+      - /home/cthien-h/data/wordpress:/var/www/wordpress
+    networks:
+      - docker-network
+    restart: unless-stopped
+    depends_on:
+      - "wordpress"
+
+  wordpress:
+    container_name: wordpress
+    env_file:
+      - .env
+    environment:
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - MYSQL_HOSTNAME
+    build: ./requirements/wordpress
+    volumes:
+      - /home/cthien-h/data/wordpress:/var/www/wordpress
+    networks:
+      - docker-network
+    restart: unless-stopped
+    depends_on:
+      - "mariadb"
