@@ -33,7 +33,7 @@ services:
       - MYSQL_ROOT_PASSWORD
     build: ./requirements/mariadb
     volumes:
-      - /home/cthien-h/data/mariadb:/var/lib/mysql
+      - volume-db:/var/lib/mysql:rw
     networks:
       - docker-network
     restart: unless-stopped
@@ -44,7 +44,7 @@ services:
     ports:
       - "443:443"
     volumes:
-      - /home/cthien-h/data/wordpress:/var/www/wordpress
+      - volume-wordpress:/var/www/wordpress:rw
     networks:
       - docker-network
     restart: unless-stopped
@@ -62,7 +62,7 @@ services:
       - MYSQL_HOSTNAME
     build: ./requirements/wordpress
     volumes:
-      - /home/cthien-h/data/wordpress:/var/www/wordpress
+      - volume-wordpress:/var/www/wordpress:rw
     networks:
       - docker-network
     restart: unless-stopped

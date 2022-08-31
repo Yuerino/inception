@@ -12,6 +12,9 @@ if [ ! -f var/www/wordpress/wp-config.php ]; then
 	sed -i "s/localhost/$MYSQL_HOSTNAME/g" wp-config-sample.php
 	sed -i "s/database_name_here/$MYSQL_DATABASE/g" wp-config-sample.php
 	mv wp-config-sample.php wp-config.php
+	mv ../wp-auto-install.php ./wp-auto-install.php
+	sleep 5
+	php -f wp-auto-install.php
 fi
 
 exec "$@"

@@ -8,6 +8,7 @@ RUN apt-get install -y php php-common php-fpm php-mysql
 EXPOSE 9000
 
 COPY conf/www.conf /etc/php/7.3/fpm/pool.d/
+COPY tools/wp-auto-install.php /var/www/
 COPY tools/wordpress-latest.tar.gz /var/www/
 COPY tools/setup-wordpress.sh /var/www/
 
